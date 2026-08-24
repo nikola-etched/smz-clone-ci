@@ -1,0 +1,34 @@
+"""Zero-dimensional nuclear fusion plasma simulation."""
+
+module(
+    name = "fusion",
+    version = "0.1.0",
+)
+
+bazel_dep(name = "rules_rust", version = "0.73.0")
+
+RUST_EDITION = "2024"
+
+RUST_VERSION = "1.97.1"
+
+rust = use_extension("@rules_rust//rust:extensions.bzl", "rust")
+rust.toolchain(
+    edition = RUST_EDITION,
+    rustfmt_version = RUST_VERSION,
+    versions = [RUST_VERSION],
+)
+use_repo(rust, "rust_toolchains")
+
+register_toolchains("@rust_toolchains//:all")
+
+crate = use_extension("@rules_rust//crate_universe:extensions.bzl", "crate")
+crate.from_cargo(
+    name = "crates",
+    cargo_lockfile = "//:Cargo.lock",
+    manifests = [
+        "//:Cargo.toml",
+        "//crates/fusion-core:Cargo.toml",
+        "//crates/fusion-sim:Cargo.toml",
+    ],
+)
+use_repo(crate, "crates")

@@ -1,0 +1,22 @@
+exports_files([
+    ".clippy.toml",
+    ".rustfmt.toml",
+])
+
+alias(
+    name = "clippy.toml",
+    actual = ".clippy.toml",
+    visibility = ["//visibility:public"],
+)
+
+alias(
+    name = "rustfmt.toml",
+    actual = ".rustfmt.toml",
+    visibility = ["//visibility:public"],
+)
+
+alias(
+    name = "fusion-sim",
+    actual = "//crates/fusion-sim",
+    visibility = ["//visibility:public"],
+)

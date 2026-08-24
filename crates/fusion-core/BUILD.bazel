@@ -1,0 +1,35 @@
+load("@crates//:defs.bzl", "all_crate_deps")
+load("@rules_rust//rust:defs.bzl", "rust_doc", "rust_doc_test", "rust_library", "rust_test")
+
+package(default_visibility = ["//visibility:public"])
+
+rust_library(
+    name = "fusion-core",
+    srcs = glob(["src/**/*.rs"]),
+    crate_name = "fusion_core",
+    proc_macro_deps = all_crate_deps(proc_macro = True),
+    deps = all_crate_deps(normal = True),
+)
+
+rust_test(
+    name = "fusion-core-unit-test",
+    crate = ":fusion-core",
+    proc_macro_deps = all_crate_deps(proc_macro_dev = True),
+    deps = all_crate_deps(normal_dev = True),
+)
+
+rust_test(
+    name = "lawson-test",
+    srcs = ["tests/lawson.rs"],
+    deps = [":fusion-core"] + all_crate_deps(normal_dev = True),
+)
+
+rust_doc(
+    name = "fusion-core-doc",
+    crate = ":fusion-core",
+)
+
+rust_doc_test(
+    name = "fusion-core-doc-test",
+    crate = ":fusion-core",
+)

@@ -1,0 +1,27 @@
+common --enable_platform_specific_config
+
+build --incompatible_strict_action_env
+build --nolegacy_external_runfiles
+
+test --test_output=errors
+test --test_summary=terse
+test --test_verbose_timeout_warnings
+
+# Lint the Rust sources through rules_rust aspects.
+build:clippy --aspects=@rules_rust//rust:defs.bzl%rust_clippy_aspect
+build:clippy --output_groups=+clippy_checks
+build:clippy --@rules_rust//:clippy.toml=//:clippy.toml
+build:clippy --@rules_rust//:clippy_flags=-Dwarnings
+
+build:rustfmt --aspects=@rules_rust//rust:defs.bzl%rustfmt_aspect
+build:rustfmt --output_groups=+rustfmt_checks
+build:rustfmt --@rules_rust//:rustfmt.toml=//:rustfmt.toml
+
+# Settings used by GitHub Actions.
+common:ci --announce_rc
+common:ci --color=yes
+common:ci --show_timestamps
+build:ci --keep_going
+test:ci --test_output=errors
+
+try-import %workspace%/user.bazelrc
